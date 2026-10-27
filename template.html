@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>{{ nome }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: Arial, Helvetica, sans-serif; color: #111;
+         -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .pagina { position: relative; width: 210mm; height: 296mm; overflow: hidden; }
+
+  /* faixa marrom + nome */
+  .faixa { position: absolute; top: 0; left: 0; width: 210mm; height: 35mm;
+           background: #7e4c00; display: flex; align-items: center;
+           padding-left: 77mm; padding-right: 10mm; }
+  .faixa h1 { margin: 0; color: #fff; font-weight: normal; text-transform: uppercase;
+              font-family: Marcellus, Optima, Candara, Georgia, serif;
+              line-height: 1.1; font-size: {{ fonte_nome }}pt; }
+
+  /* foto por cima da faixa */
+  .foto { position: absolute; top: 6mm; left: 17mm; width: 54mm; height: 55mm;
+          border: 1.2mm solid #fff; overflow: hidden;
+          background: linear-gradient(to bottom, #c9e8ff 0%, #c9e8ff 55%,
+                      #c5de8a 55%, #c5de8a 70%, #8da000 70%, #8da000 100%); }
+  .foto img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+  
+  /* blocos do topo */
+  h2 { font-family: "Roboto Condensed", "Arial Narrow", Arial, sans-serif;
+       font-weight: 700; text-transform: uppercase; font-size: 13pt;
+       margin: 0 0 2.5mm 0; }
+  .dados  { position: absolute; top: 43mm; left: 77mm;  width: 52mm; }
+  .resp   { position: absolute; top: 43mm; left: 132mm; width: 62mm; }
+  .dados p, .resp p { margin: 0; font-size: 10.5pt; line-height: 1.5; font-weight: 400;
+                      font-family: "Roboto Condensed", "Arial Narrow", Arial, sans-serif; }
+  .dados b, .resp b, .dados .b, .resp .b { font-weight: 700; }
+
+  .carac { position: absolute; top: 67mm; left: 19mm; width: 52mm; }
+  .carac h2 { font-size: 10pt; margin-bottom: 1.5mm; }
+  .carac p { margin: 0; font-size: 7.5pt; line-height: 1.3; }
+
+  /* experiência */
+  .exp { position: absolute; top: 89mm; left: 17mm; right: 17mm; }
+  .exp hr { border: 0; border-top: 0.3mm solid #444; margin: 0 0 4mm 0; }
+  .exp h2 { font-size: 11pt; margin-bottom: 2.5mm; }
+  .equipe { margin-bottom: 1mm; }
+  .equipe b { display: block; font-size: 9pt; line-height: 1.3; }
+  .equipe .ed { font-size: 9pt; line-height: 1.25; word-break: normal; overflow-wrap: normal; }
+  .equipe .coord { font-size: 8.5pt; line-height: 1.3; margin-top: 1.5mm; color: #333; }
+</style>
+</head>
+<body>
+<div class="pagina">
+
+  <div class="faixa"><h1>{{ nome }}</h1></div>
+
+  <div class="foto">
+    {% if foto %}<img src="{{ foto }}">{% endif %}
+  </div>
+
+  <div class="dados">
+    <h2>Dados</h2>
+    <p class="b">EJCIC: {{ ejcic }}</p>
+    <p class="b">Idade: {{ idade }}</p>
+    <p><b>Telefone:</b> {{ telefone }}</p>
+    <p><b>Instagram:</b> {{ instagram }}</p>
+  </div>
+
+  <div class="resp">
+    <h2>Dados de responsáveis</h2>
+    <p class="b">Emergência: {{ emergencia_nome }}</p>
+    <p><b>Telefone:</b> {{ emergencia_tel }}</p>
+  </div>
+
+  <div class="carac">
+    <h2>Características</h2>
+    <p>{{ caracteristicas }}</p>
+  </div>
+
+  <div class="exp">
+    <hr>
+    <h2>Experiência de equipes</h2>
+    {% for equipe, linha in equipes.items() %}
+    <div class="equipe">
+      <b>{{ equipe.replace("Dirigencia", "Dirigência") }}</b>
+      <div class="ed">{{ linha }}</div>
+      {% if equipe != "Dirigencia" %}<div class="coord">Coordenação ( {% if coord[equipe] %}X{% else %}&nbsp;{% endif %} )</div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+</body>
+</html>

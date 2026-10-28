@@ -42,7 +42,7 @@ def equipes_da_pessoa(pessoa):
 
 def calcular_idade(texto):
     try:
-        dia, mes, ano = texto.strip().split("/")
+        ano, mes, dia = texto.strip().split("-")
         nasc = date(int(ano), int(mes), int(dia))
     except ValueError:
         return ""
@@ -126,6 +126,11 @@ def carregar_coordenacao():
 
 COORDENACAO = carregar_coordenacao()
 
+def formatar_caracteristicas(texto):
+    # "A;B;C" -> ["A", "B", "C"] (aceita ; ou , como separador)
+    itens = [i.strip() for i in re.split(r"[;,]", texto) if i.strip()]
+    return itens
+
 def montar_pacote(pessoa):
     por_equipe = equipes_da_pessoa(pessoa)
     coordenou = COORDENACAO.get(normalizar(pessoa["Nome Completo:"].strip()), set())
@@ -141,10 +146,10 @@ def montar_pacote(pessoa):
         "telefone": pessoa["Numero de whatsApp ou Contato:"].strip(),
         "instagram": pessoa["Instagram:"].strip(),
         "ejcic": pessoa["Quando você participou como encontrista do EJCIC?"].strip(),
-        "caracteristicas": pessoa["Selecione as habilidades que tem a ver com seu perfil:"].strip(),
+        "caracteristicas": formatar_caracteristicas(pessoa["Selecione as habilidades que tem a ver com seu perfil:"]),
         # ainda não existem no formulário: ficam vazios até criarmos as perguntas
-        "emergencia_nome": pessoa.get("Contato de emergência: nome", "").strip(),
-        "emergencia_tel": pessoa.get("Contato de emergência: telefone", "").strip(),
+        "emergencia_nome": pessoa.get("Contato de Emergência (nome)", "").strip(),
+        "emergencia_tel": pessoa.get("Contato de Emergência (número)", "").strip(),
         "equipes": {eq: formatar_edicoes(por_equipe.get(eq, [])) for eq in EQUIPES},
         "coord": {eq: normalizar(eq) in coordenou for eq in EQUIPES},
     }

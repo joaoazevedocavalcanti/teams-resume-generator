@@ -41,6 +41,7 @@
   .carac { position: absolute; top: 67mm; left: 19mm; width: 52mm; }
   .carac h2 { font-size: 10pt; margin-bottom: 1.5mm; }
   .carac p { margin: 0; font-size: 7.5pt; line-height: 1.3; }
+  .hab { white-space: nowrap; }
 
   /* experiência */
   .exp { position: absolute; top: 89mm; left: 17mm; right: 17mm; }
@@ -77,7 +78,7 @@
 
   <div class="carac">
     <h2>Características</h2>
-    <p>{{ caracteristicas }}</p>
+    <p>{% for c in caracteristicas %}<span class="hab">{{ c }}</span>{% if not loop.last %}, {% endif %}{% endfor %}</p>
   </div>
 
   <div class="exp">

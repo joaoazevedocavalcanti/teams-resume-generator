@@ -1,6 +1,6 @@
-# EJCIC Currículos
+# Gerador de Currículos
 
-Gerador de currículos em PDF para as equipes do EJCIC. O programa lê as respostas do formulário de inscrição (Google Forms), organiza a experiência de cada pessoa por equipe e edição, e gera um PDF por pessoa no modelo visual do evento.
+Gerador de currículos em PDF, foi construido devido a necessidade de um encontro de jovens. O programa lê as respostas do formulário de inscrição (Google Forms), organiza a experiência de cada pessoa por equipe e edição, e gera um PDF por pessoa no modelo visual do evento.
 
 ## O que ele faz
 

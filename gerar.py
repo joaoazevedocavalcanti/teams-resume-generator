@@ -69,16 +69,19 @@ FOTOS_MANUAIS = {}
 EXTENSOES = {".jpg", ".jpeg", ".png", ".webp"}
 Path("fotos_convertidas").mkdir(exist_ok=True)
 
-# converte HEIC/HEIF em JPG, mantendo o nome original
-for heic in Path("fotos").rglob("*"):
-    if heic.suffix.lower() in {".heic", ".heif"}:
-        destino = Path("fotos_convertidas") / (heic.stem + ".jpg")
+# regrava toda foto como JPG, seja qual for o formato real do arquivo
+for orig in Path("fotos").rglob("*"):
+    if orig.suffix.lower() in EXTENSOES | {".heic", ".heif"}:
+        destino = Path("fotos_convertidas") / (orig.stem + ".jpg")
         if not destino.exists():
-            img = ImageOps.exif_transpose(Image.open(heic)).convert("RGB")
-            img.save(destino, "JPEG", quality=92)
+            try:
+                img = ImageOps.exif_transpose(Image.open(orig)).convert("RGB")
+                img.thumbnail((1200, 1200))
+                img.save(destino, "JPEG", quality=90)
+            except Exception as e:
+                print("AVISO: não consegui abrir", orig.name, "-", e)
 
-arquivos_fotos = [a for a in Path("fotos").rglob("*") if a.suffix.lower() in EXTENSOES]
-arquivos_fotos += list(Path("fotos_convertidas").glob("*.jpg"))
+arquivos_fotos = list(Path("fotos_convertidas").glob("*.jpg"))
 
 def normalizar(texto):
     texto = unicodedata.normalize("NFD", texto.lower())
@@ -131,6 +134,24 @@ def formatar_caracteristicas(texto):
     itens = [i.strip() for i in re.split(r"[;,]", texto) if i.strip()]
     return itens
 
+def tamanho_fonte_carac(itens):
+    # quanto mais habilidades, menor a fonte, para caber na área
+    total = sum(len(i) for i in itens) + 2 * len(itens)
+    if total <= 70:
+        return 9
+    if total <= 110:
+        return 8.5
+    return 8
+
+def topo_experiencia(itens):
+    # a linha divisória só desce quando há muitas habilidades
+    total = sum(len(i) for i in itens) + 2 * len(itens)
+    if total <= 70:
+        return 89
+    if total <= 110:
+        return 92
+    return 95
+
 def montar_pacote(pessoa):
     por_equipe = equipes_da_pessoa(pessoa)
     coordenou = COORDENACAO.get(normalizar(pessoa["Nome Completo:"].strip()), set())
@@ -147,6 +168,8 @@ def montar_pacote(pessoa):
         "instagram": pessoa["Instagram:"].strip(),
         "ejcic": pessoa["Quando você participou como encontrista do EJCIC?"].strip(),
         "caracteristicas": formatar_caracteristicas(pessoa["Selecione as habilidades que tem a ver com seu perfil:"]),
+        "fonte_carac": tamanho_fonte_carac(formatar_caracteristicas(pessoa["Selecione as habilidades que tem a ver com seu perfil:"])),
+        "topo_exp": topo_experiencia(formatar_caracteristicas(pessoa["Selecione as habilidades que tem a ver com seu perfil:"])),
         # ainda não existem no formulário: ficam vazios até criarmos as perguntas
         "emergencia_nome": pessoa.get("Contato de Emergência (nome)", "").strip(),
         "emergencia_tel": pessoa.get("Contato de Emergência (número)", "").strip(),

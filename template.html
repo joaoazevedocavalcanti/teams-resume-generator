@@ -26,7 +26,7 @@
           border: 1.2mm solid #fff; overflow: hidden;
           background: linear-gradient(to bottom, #c9e8ff 0%, #c9e8ff 55%,
                       #c5de8a 55%, #c5de8a 70%, #8da000 70%, #8da000 100%); }
-  .foto img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+  .foto img { width: 100%; height: 100%; object-fit: cover; object-position: center 80%; }
   
   /* blocos do topo */
   h2 { font-family: "Roboto Condensed", "Arial Narrow", Arial, sans-serif;
@@ -40,11 +40,11 @@
 
   .carac { position: absolute; top: 67mm; left: 19mm; width: 52mm; }
   .carac h2 { font-size: 10pt; margin-bottom: 1.5mm; }
-  .carac p { margin: 0; font-size: 7.5pt; line-height: 1.3; }
+  .carac p { margin: 0; font-size: {{ fonte_carac }}pt; line-height: 1.25; }
   .hab { white-space: nowrap; }
 
   /* experiência */
-  .exp { position: absolute; top: 89mm; left: 17mm; right: 17mm; }
+  .exp { position: absolute; top: {{ topo_exp }}mm; left: 17mm; right: 17mm; }
   .exp hr { border: 0; border-top: 0.3mm solid #444; margin: 0 0 4mm 0; }
   .exp h2 { font-size: 11pt; margin-bottom: 2.5mm; }
   .equipe { margin-bottom: 1mm; }
